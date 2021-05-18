@@ -63,7 +63,7 @@ var Mayor = {
         if (harvesterNumber < energySources){
             this.spawnHarvester(spawns[0]);
         }
-        else if (builderNumber < buildingNumber && _.size(enemies) == 0){
+        else if (builderNumber < buildingNumber && fighterNumber >= 3 + _.size(enemies)){
             this.spawnBuilder(spawns[0]);
         }
         else if (fighterNumber < 3 + _.size(enemies)){
