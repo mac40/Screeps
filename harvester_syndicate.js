@@ -6,7 +6,8 @@ var harvesterSyndicate = {
             if(creep.memory.role == 'Harvester'){
                 if (creep.store.getFreeCapacity() == 0) {
                     creep.memory.job = "transfer_energy";
-                } else if (creep.store[RESOURCE_ENERGY] == 0) {
+                }
+                if (creep.store[RESOURCE_ENERGY] == 0) {
                     creep.memory.job = "gather_energy";
                 }
                 if (creep.memory.job == "transfer_energy") {
@@ -28,8 +29,10 @@ var harvesterSyndicate = {
                     }
                 } else if (creep.memory.job == "gather_energy") {
                     var sources = creep.room.find(FIND_SOURCES);
-                    if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(sources[0], { visualizePathStyle: { stroke: '#ffaa00' } });
+                    var selectedSource = parseInt(creep.name.substring(10))%_.size(sources)
+
+                    if (creep.harvest(sources[selectedSource]) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(sources[selectedSource], { visualizePathStyle: { stroke: '#ffaa00' } });
                     }
                 }
             }
