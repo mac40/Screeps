@@ -1,0 +1,1 @@
+// The Guild of Workers handle the behaviour of worker creeps

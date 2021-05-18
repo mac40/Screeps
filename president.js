@@ -1,0 +1,1 @@
+// The President is in charge of handling the expansion of the empire
