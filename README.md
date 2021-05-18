@@ -1,2 +1,2 @@
 # Screeps
-Screeps control code
+Code for [Screeps](https://screeps.com/).
