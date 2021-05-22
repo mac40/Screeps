@@ -17,7 +17,7 @@ var harvesterSyndicate = {
                                 structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                         }
                     });
-                    if (targets.length > 0) {
+                    if (targets.length > 0 && creep.room.controller.ticksToDowngrade > 18000) {
                         if (creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                             creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffffff' } });
                         }
