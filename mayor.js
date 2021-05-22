@@ -12,6 +12,19 @@ var Mayor = {
 
 var Legislator = {
     work: function(room) {
+
+        // Setup room Epoch
+        if (room.energyCapacityAvailable < 1000) {
+            room.memory.era = 'settling';
+        }
+        else if (room.energyCapacityAvailable < 2000) {
+            room.memory.era = 'developing';
+        }
+        else {
+            room.memory.era = 'stability';
+        }
+
+
         var laws = {}
 
         // Set martial law if there are enemies in the room
@@ -34,7 +47,7 @@ var RegistryOffice = {
 
     work: function(room, laws) {
         var census = this.census(room);
-        this.birthControl(room, laws, census);
+        this.populationControl(room, laws, census);
     },
 
     census: function(room){
@@ -63,25 +76,22 @@ var RegistryOffice = {
 
         }));
 
-        var buildingNumber = _.size(room.find(FIND_STRUCTURES, {
-            filter: function (structure) {
-                return (
-                    structure.structureType == STRUCTURE_CONTROLLER ||
-                    structure.structureType == STRUCTURE_SPAWN ||
-                    structure.structureType == STRUCTURE_TOWER
-                )
-            }
-        }));
-
         return {
             harvesterNumber: harvesterNumber,
             builderNumber: builderNumber,
             fighterNumber: fighterNumber,
-            buildingNumber: buildingNumber
         }
     },
 
-    birthControl: function(room, laws, census){
+    undertaker: function(){
+        for (var creep in Memory.creeps){
+            if (!Game.creeps[creep]){
+                delete Memory.creeps[creep];
+            }
+        }
+    },
+
+    populationControl: function(room, laws, census){
         /**
          * Spawn Priority:
          * 1. Harvesters
@@ -91,19 +101,44 @@ var RegistryOffice = {
          * Spawn priority can be suppressed or changed with laws
          */
 
-        // Harvesters spawn rules
-        if (census.harvesterNumber < _.size(room.find(FIND_SOURCES))) {
-            MaternityWard.spawnHarvester(room.find(FIND_MY_SPAWNS)[0]);
-        }
+        this.undertaker();
 
-        // Builders spawn rules
-        else if (census.builderNumber < census.buildingNumber && !laws.martial) {
-            MaternityWard.spawnBuilder(room.find(FIND_MY_SPAWNS)[0]);
-        }
+        if(room.memory.era == 'settling'){
+            /**
+             * During settlement periods fighters aren't spawned
+             * to prioritize development
+             * 
+             * TODO: if attacked do:
+             * 1. get fighters from other rooms if any
+             * 2. activate safe mode based on attack proportion
+             * 3. flee from the room
+             */
 
-        // Fighters spawn rules
-        else if (census.fighterNumber < 3 + _.size(room.find(FIND_HOSTILE_CREEPS))) {
-            MaternityWard.spawnFighter(room.find(FIND_MY_SPAWNS)[0]);
+            if (census.harvesterNumber < _.size(room.find(FIND_SOURCES))) {
+                MaternityWard.spawnHarvester(room.find(FIND_MY_SPAWNS)[0]);
+            }
+            else if (census.builderNumber < 3) {
+                MaternityWard.spawnBuilder(room.find(FIND_MY_SPAWNS)[0]);
+            }
+        }
+        else if (room.memory.era == 'developing'){
+            // Harvesters spawn rules
+            if (census.harvesterNumber < _.size(room.find(FIND_SOURCES))) {
+                MaternityWard.spawnHarvester(room.find(FIND_MY_SPAWNS)[0]);
+            }
+
+            // Builders spawn rules
+            else if (census.builderNumber < 3 && !laws.martial) {
+                MaternityWard.spawnBuilder(room.find(FIND_MY_SPAWNS)[0]);
+            }
+
+            // Fighters spawn rules
+            else if (census.fighterNumber < 3 + _.size(room.find(FIND_HOSTILE_CREEPS))) {
+                MaternityWard.spawnFighter(room.find(FIND_MY_SPAWNS)[0]);
+            }
+        }
+        else if (room.memory.era == 'stability'){
+            var temp;
         }
     }
 };
