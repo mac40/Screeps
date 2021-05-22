@@ -170,7 +170,8 @@ var MaternityWard = {
         // Generate Creep from passed Spawn
         spawn.spawnCreep(this.bodies.SimpleHarvester, name, {
             memory: {
-                role: 'Harvester'
+                role: 'Harvester',
+                hash: parseInt(name.substring(10))
             }
         })
     },
@@ -208,7 +209,15 @@ var MaternityWard = {
 
 var landRegistry = {
     work: function(room, laws){
-        return NaN;
+        if (room.memory.era == 'settling' && !laws.martial){
+            if (room.energyAvailable == room.energyCapacityAvailable){
+                this.buildExtention(room);
+            }
+        }
+    },
+
+    buildExtention: function(room){
+        // Voglio piangere
     }
 };
 

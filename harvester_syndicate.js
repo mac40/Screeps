@@ -29,10 +29,18 @@ var harvesterSyndicate = {
                     }
                 } else if (creep.memory.job == "gather_energy") {
                     var sources = creep.room.find(FIND_SOURCES);
-                    var selectedSource = parseInt(creep.name.substring(10))%_.size(sources)
+                    if(_.size(Game.creeps) < _.size(sources)){
+                        var selectedSource = creep.pos.findClosestByPath(FIND_SOURCES);
+                    }
+                    else {
+                        var selectedSource = sources[creep.memory.hash%_.size(sources)];
+                    }
 
-                    if (creep.harvest(sources[selectedSource]) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(sources[selectedSource], { visualizePathStyle: { stroke: '#ffaa00' } });
+
+                    if (creep.harvest(selectedSource) == ERR_NOT_IN_RANGE) {
+                        if (creep.moveTo(selectedSource, { visualizePathStyle: { stroke: '#ffaa00' } }) == ERR_NO_PATH){
+                            creep.memory.hash = creep.memory.hash + 1;
+                        }
                     }
                 }
             }
