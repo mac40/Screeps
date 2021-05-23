@@ -83,7 +83,7 @@ var RegistryOffice = {
         }
     },
 
-    undertaker: function(){
+    willAttorney: function(){
         for (var creep in Memory.creeps){
             if (!Game.creeps[creep]){
                 delete Memory.creeps[creep];
@@ -101,7 +101,7 @@ var RegistryOffice = {
          * Spawn priority can be suppressed or changed with laws
          */
 
-        this.undertaker();
+        this.willAttorney();
 
         if(room.memory.era == 'settling'){
             /**
