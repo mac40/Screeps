@@ -55,7 +55,7 @@ var RegistryOffice = {
             filter: function (creep) {
                 return (
                     creep.memory.role == 'Harvester'
-                )
+                );
             }
         }));
 
@@ -63,7 +63,7 @@ var RegistryOffice = {
             filter: function (creep) {
                 return (
                     creep.memory.role == 'Builder'
-                )
+                );
             }
         }));
 
@@ -71,7 +71,7 @@ var RegistryOffice = {
             filter: function (creep) {
                 return (
                     creep.memory.role == 'Fighter'
-                )
+                );
             }
 
         }));
@@ -114,7 +114,7 @@ var RegistryOffice = {
              * 3. flee from the room
              */
 
-            if (census.harvesterNumber < _.size(room.find(FIND_SOURCES))) {
+            if (census.harvesterNumber < _.size(room.find(FIND_SOURCES))*2) {
                 MaternityWard.spawnHarvester(room.find(FIND_MY_SPAWNS)[0]);
             }
             else if (census.builderNumber < 3) {
