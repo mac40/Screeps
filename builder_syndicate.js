@@ -4,7 +4,7 @@ var WorkersGuild = require('workers_guild');
 var EmploymentOffice = WorkersGuild.employmentOffice;
 var JobInstructor = WorkersGuild.jobInstructor;
 
-var builderSyndicate = {
+var BuilderSyndicate = {
     work: function () {
         _.forEach(Game.creeps, function (creep) {
             if (creep.memory.role == 'Builder') {
@@ -22,4 +22,4 @@ var builderSyndicate = {
     }
 }
 
-module.exports = builderSyndicate;
+module.exports = BuilderSyndicate;

@@ -4,14 +4,14 @@ var WorkersGuild = require('workers_guild');
 var EmploymentOffice = WorkersGuild.employmentOffice;
 var JobInstructor = WorkersGuild.jobInstructor;
 
-var harvesterSyndicate = {
+var HarvesterSyndicate = {
     work: function () {
         _.forEach(Game.creeps, function (creep) {
             if (creep.memory.role == 'Harvester') {
 
                 EmploymentOffice.assignJob(creep);
 
-                if (creep.memory.job == "transfer_energy") {
+                if (creep.memory.job == "store_energy") {
                     JobInstructor.storeEnergy(creep);
                 }
                 else if (creep.memory.job == "gather_energy") {
@@ -22,4 +22,4 @@ var harvesterSyndicate = {
     }
 }
 
-module.exports = harvesterSyndicate;
+module.exports = HarvesterSyndicate;

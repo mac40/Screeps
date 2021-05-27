@@ -1,11 +1,19 @@
 // The Workers Guild handles the job assignment and instruction of creeps across all syndicates
 
-var employmentOffice = {
+var EmploymentOffice = {
+
+    /**
+     * The Employment Office assign a job based on:
+     * 1. The creep role
+     * 2. The creep status
+     * 3. The laws of the room the creep is in
+     */
+
     assignJob: function(creep) {
         // ----- HARVESTER JOBS ----- //
         if (creep.memory.role == 'Harvester'){
             if (creep.store.getFreeCapacity() == 0) {
-                creep.memory.job = "transfer_energy";
+                creep.memory.job = "store_energy";
             }
             if (creep.store[RESOURCE_ENERGY] == 0) {
                 creep.memory.job = "gather_energy";
@@ -23,7 +31,7 @@ var employmentOffice = {
     }
 }
 
-var jobInstructor = {
+var JobInstructor = {
     storeEnergy: function (creep) {
         var targets = creep.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
@@ -89,5 +97,5 @@ var jobInstructor = {
     }
 }
 
-module.exports.employmentOffice = employmentOffice;
-module.exports.jobInstructor = jobInstructor;
+module.exports.employmentOffice = EmploymentOffice;
+module.exports.jobInstructor = JobInstructor;
