@@ -12,7 +12,7 @@ var harvesterSyndicate = {
                 EmploymentOffice.assignJob(creep);
 
                 if (creep.memory.job == "transfer_energy") {
-                    JobInstructor.transferEnergy(creep);
+                    JobInstructor.storeEnergy(creep);
                 }
                 else if (creep.memory.job == "gather_energy") {
                     JobInstructor.gatherEnergy(creep);

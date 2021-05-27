@@ -24,7 +24,7 @@ var employmentOffice = {
 }
 
 var jobInstructor = {
-    transferEnergy: function (creep) {
+    storeEnergy: function (creep) {
         var targets = creep.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return (
@@ -40,9 +40,7 @@ var jobInstructor = {
             }
         }
         else {
-            if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(creep.room.controller, { visualizePathStyle: { stroke: '#ff0000' } });
-            }
+            this.upgradeController(creep);
         }
     },
 
@@ -78,6 +76,15 @@ var jobInstructor = {
             if (creep.build(constructionSites[0]) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(constructionSites[0]);
             }
+        }
+        else {
+            this.upgradeController(creep);
+        }
+    },
+
+    upgradeController: function(creep) {
+        if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(creep.room.controller, { visualizePathStyle: { stroke: '#ff0000' } });
         }
     }
 }
