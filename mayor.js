@@ -4,38 +4,48 @@ var Mayor = {
 
     work: function () {
         _.forEach(Game.rooms, function(room){
-            var laws = Legislator.work(room);
-            RegistryOffice.work(room, laws);
+            Legislator.work(room);
+            RegistryOffice.work(room);
+            LandRegistry.work(room);
         })
     }
 };
 
 var Legislator = {
+    /**
+     * The Legislator is in charge of setting up laws,
+     * based on the roomController level, that will define
+     * the RegistryOffice, LandRegistry and workers behaviour
+     */
     work: function(room) {
 
-        // Setup room Epoch
-        if (room.energyCapacityAvailable < 1000) {
-            room.memory.era = 'settling';
-        }
-        else if (room.energyCapacityAvailable < 2000) {
-            room.memory.era = 'developing';
-        }
-        else {
-            room.memory.era = 'stability';
+        switch (room.controller.level) {
+            case 1:
+                room.memory.law_PromoteHarvesting = true;
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            case 6:
+                break;
+            case 7:
+                break;
+            case 8:
+                break;
         }
 
-
-        var laws = {}
-
-        // Set martial law if there are enemies in the room
+        // ----- MARTIAL LAW ----- //
         if (_.size(room.find(FIND_HOSTILE_CREEPS)) > 0) {
-            laws.martial = true;
+            room.memory.law_Martial = true;
         }
         else {
-            laws.martial = false;
+            room.memory.law_Martial = false;
         }
-
-        return laws;
     }
 };
 
@@ -45,9 +55,9 @@ var RegistryOffice = {
      * based on laws and current population
      */
 
-    work: function(room, laws) {
+    work: function(room) {
         var census = this.census(room);
-        this.populationControl(room, laws, census);
+        this.populationControl(room, census);
     },
 
     census: function(room){
@@ -84,6 +94,10 @@ var RegistryOffice = {
     },
 
     willAttorney: function(){
+        /**
+         * The will attorney handles the memories of
+         * dead creeps
+         */
         for (var creep in Memory.creeps){
             if (!Game.creeps[creep]){
                 delete Memory.creeps[creep];
@@ -91,54 +105,15 @@ var RegistryOffice = {
         }
     },
 
-    populationControl: function(room, laws, census){
-        /**
-         * Spawn Priority:
-         * 1. Harvesters
-         * 2. Builders
-         * 3. Fighters
-         * 
-         * Spawn priority can be suppressed or changed with laws
-         */
+    populationControl: function(room, census){
 
         this.willAttorney();
 
-        if(room.memory.era == 'settling'){
-            /**
-             * During settlement periods fighters aren't spawned
-             * to prioritize development
-             * 
-             * TODO: if attacked do:
-             * 1. get fighters from other rooms if any
-             * 2. activate safe mode based on attack proportion
-             * 3. flee from the room
-             */
-
-            if (census.harvesterNumber < _.size(room.find(FIND_SOURCES))*2) {
-                MaternityWard.spawnHarvester(room.find(FIND_MY_SPAWNS)[0]);
-            }
-            else if (census.builderNumber < 3) {
-                MaternityWard.spawnBuilder(room.find(FIND_MY_SPAWNS)[0]);
-            }
+        if (census.harvesterNumber < _.size(room.find(FIND_SOURCES))*2) {
+            MaternityWard.spawnHarvester(room.find(FIND_MY_SPAWNS)[0]);
         }
-        else if (room.memory.era == 'developing'){
-            // Harvesters spawn rules
-            if (census.harvesterNumber < _.size(room.find(FIND_SOURCES))) {
-                MaternityWard.spawnHarvester(room.find(FIND_MY_SPAWNS)[0]);
-            }
-
-            // Builders spawn rules
-            else if (census.builderNumber < 3 && !laws.martial) {
-                MaternityWard.spawnBuilder(room.find(FIND_MY_SPAWNS)[0]);
-            }
-
-            // Fighters spawn rules
-            else if (census.fighterNumber < 3 + _.size(room.find(FIND_HOSTILE_CREEPS))) {
-                MaternityWard.spawnFighter(room.find(FIND_MY_SPAWNS)[0]);
-            }
-        }
-        else if (room.memory.era == 'stability'){
-            var temp;
+        else if (census.builderNumber < 3) {
+            MaternityWard.spawnBuilder(room.find(FIND_MY_SPAWNS)[0]);
         }
     }
 };
@@ -207,17 +182,37 @@ var MaternityWard = {
     }
 };
 
-var landRegistry = {
-    work: function(room, laws){
-        if (room.memory.era == 'settling' && !laws.martial){
-            if (room.energyAvailable == room.energyCapacityAvailable){
-                this.buildExtention(room);
-            }
-        }
+var LandRegistry = {
+    work: function(room){
+        // TODO
     },
 
-    buildExtention: function(room){
-        // Voglio piangere
+    planExtention: function(room) {
+        // TODO
+    },
+
+    planRoad: function(room, from, to) {
+        to = { pos: to.pos, range: 1 };
+        var path = PathFinder.search(from.pos, to).path;
+        _.forEach(path, function (pos) {
+            room.createConstructionSite(pos, STRUCTURE_ROAD);
+        });
+    },
+
+    planTower: function(room) {
+        // TODO
+    },
+
+    planRampart: function(room) {
+        // TODO
+    },
+
+    planWall: function(room) {
+        // TODO
+    },
+
+    planSpawn: function(room) {
+        // TODO
     }
 };
 
