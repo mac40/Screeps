@@ -19,9 +19,12 @@ var Legislator = {
      */
     work: function(room) {
 
+        room.memory.laws = {};
+
         switch (room.controller.level) {
             case 1:
-                room.memory.law_PromoteHarvesting = true;
+                room.memory.laws.promoteHarvesting = true;
+                room.memory.laws.forceUpgrade = true;
                 break;
             case 2:
                 break;
@@ -41,10 +44,10 @@ var Legislator = {
 
         // ----- MARTIAL LAW ----- //
         if (_.size(room.find(FIND_HOSTILE_CREEPS)) > 0) {
-            room.memory.law_Martial = true;
+            room.memory.laws.Martial = true;
         }
         else {
-            room.memory.law_Martial = false;
+            room.memory.laws.Martial = false;
         }
     }
 };

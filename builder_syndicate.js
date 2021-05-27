@@ -17,6 +17,9 @@ var BuilderSyndicate = {
                 else if (creep.memory.job == 'build') {
                     JobInstructor.build(creep);
                 }
+                else if (creep.memory.job == 'upgrade_controller') {
+                    JobInstructor.upgradeController(creep);
+                }
             }
         })
     }

@@ -25,7 +25,12 @@ var EmploymentOffice = {
                 creep.memory.job = 'gather_energy';
             }
             if (creep.store.getFreeCapacity() == 0) {
-                creep.memory.job = 'build';
+                if(creep.room.memory.laws.forceUpgrade){
+                    creep.memory.job = 'upgrade_controller';
+                }
+                else {
+                    creep.memory.job = 'build';
+                }
             }
         }
     }
