@@ -13,23 +13,29 @@ var EmploymentOffice = {
         // ----- HARVESTER JOBS ----- //
         if (creep.memory.role == 'Harvester'){
             if (creep.store.getFreeCapacity() == 0) {
-                creep.memory.job = "store_energy";
+                if (creep.room.energyAvailable == creep.room.energyCapacityAvailable){
+                    creep.memory.job = 'upgrade_controller';
+                }
+                else {
+                    creep.memory.job = 'store_energy';
+                }
             }
             if (creep.store[RESOURCE_ENERGY] == 0) {
-                creep.memory.job = "gather_energy";
+                creep.memory.job = 'gather_energy';
             }
         }
+
         // ----- BUILDER JOBS ----- //
         else if (creep.memory.role == 'Builder'){
             if (creep.store[RESOURCE_ENERGY] == 0) {
                 creep.memory.job = 'gather_energy';
             }
             if (creep.store.getFreeCapacity() == 0) {
-                if(creep.room.memory.laws.forceUpgrade){
-                    creep.memory.job = 'upgrade_controller';
+                if (creep.room.find(FIND_CONSTRUCTION_SITES).length){
+                    creep.memory.job = 'build';
                 }
                 else {
-                    creep.memory.job = 'build';
+                    creep.memory.job = 'upgrade_controller';
                 }
             }
         }
@@ -51,9 +57,6 @@ var JobInstructor = {
             if (creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffffff' } });
             }
-        }
-        else {
-            this.upgradeController(creep);
         }
     },
 
@@ -89,9 +92,6 @@ var JobInstructor = {
             if (creep.build(constructionSites[0]) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(constructionSites[0]);
             }
-        }
-        else {
-            this.upgradeController(creep);
         }
     },
 
